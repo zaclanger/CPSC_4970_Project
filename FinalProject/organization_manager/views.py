@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponse
+from django.template import loader
 
 from .models import Person, Organization, Household
 
@@ -8,8 +9,10 @@ from .models import Person, Organization, Household
 
 def index(request):
     person_list = Person.objects.all()
-    out = ', '.join([person.get_full_name() for person in person_list])
-    return HttpResponse(out)
+    context = {
+        "person_list": person_list,
+    }
+    return render(request, 'organization_manager/index.html', context)
 
 def person_detail(request, person_id):
     person = Person.objects.get(person_ID=person_id)

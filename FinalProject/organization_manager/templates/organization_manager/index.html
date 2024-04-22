@@ -2,9 +2,19 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Organization Manager</title>
 </head>
 <body>
+
+{% if person_list %}
+    <ul>
+    {% for person in person_list %}
+        <li><a href="/organization_manager/person/{{ person.person_ID }}/">{{ person.get_full_name }}</a></li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>There are no people in the database yet!</p>
+{% endif %}
 
 </body>
 </html>
