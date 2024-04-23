@@ -1,9 +1,13 @@
 from django.urls import path
 from . import views
 
+app_name = 'organization_manager'
 urlpatterns = [
-    path('', views.index, name='index'),
-    path('person/<int:person_id>/', views.person_detail, name='person_detail'),
-    path('household/<int:household_id>/', views.house_detail, name='household_detail'),
-    path('organization/<int:organization_id>/', views.organization_detail, name='organization_detail')
+    path('', views.IndexView.as_view(), name='index'),
+#    path('person/<int:pk>/', views.PersonDetailView.as_view(), name='person_detail'),
+    path('person/<int:person_ID>/', views.person_form, name='update_person'),
+#    path('household/<int:pk>/', views.HouseholdDetailView.as_view(), name='household_detail'),
+    path('household/<int:household_ID>', views.household_form, name='update_household'),
+#    path('organization/<int:pk>/', views.OrganizationDetailView.as_view(), name='organization_detail'),
+    path('organization/<int:org_ID>', views.organization_form, name='update_organization')
 ]

@@ -1,0 +1,16 @@
+{% extends "organization_manager/base.html" %}
+
+{% block content %}
+{% if person %}
+    <p>ID: {{ person.person_ID }}</p>
+    <p>Name: {{ person.get_full_name }}</p>
+    {% if person.spouse %}
+        <p>Spouse: {{ person.spouse }}</p>
+    {% endif %}
+    {% if person.household %}
+        <p>Household: {{ person.household }}</p>
+    {% endif %}
+{% else %}
+    <p>Person {{ person.person_ID }} does not exist.</p>
+{% endif %}
+{% endblock content %}

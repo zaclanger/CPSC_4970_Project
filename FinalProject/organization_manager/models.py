@@ -5,14 +5,15 @@ from django.db import models
 
 class Organization(models.Model):
     org_ID = models.AutoField(primary_key=True)
-    organization_name = models.CharField(max_length=80)
+    organization_name = models.CharField(max_length=80, null=False)
     organization_description = models.TextField(null=True, blank=True)
+    member_households = models.ManyToManyField('Household', blank=True)
 
     def __str__(self):
         return self.organization_name
 
-    def __repr__(self):
-        return  f"""
+    def get_info(self):
+        return f"""
                 Organization: {self.org_ID}
                 Name: {self.organization_name}
                 Description: {self.organization_description}
@@ -21,7 +22,7 @@ class Organization(models.Model):
 
 class Household(models.Model):
     household_ID = models.AutoField(primary_key=True)
-    organizations = models.ManyToManyField(Organization, blank=True)
+    household_name = models.CharField(max_length=20, default='household_ID', null=False)
     household_contact = models.ForeignKey('Person', related_name='contact_person', on_delete=models.SET_NULL,
                                           null=True, blank=True)
     address = models.TextField(null=True, blank=True)
@@ -29,10 +30,10 @@ class Household(models.Model):
     def __str__(self):
         return str(self.household_ID)
 
-    def __repr__(self):
-        return  f"""
+    def get_info(self):
+        return f"""
                 Household ID: {self.household_ID}
-                Organizations: {self.organizations}
+                Organizations: {[org.organization_name for org in self.organization_set]}
                 Household Contact: {self.household_contact}
                 Address: {self.address}
                 """
@@ -42,22 +43,22 @@ class Person(models.Model):
     person_ID = models.AutoField(primary_key=True)
     household = models.ForeignKey(Household, on_delete=models.SET_NULL, null=True, blank=True)
     first_name = models.CharField(max_length=20, null=False)
-    middle_name = models.CharField(max_length=20, null=True, blank=True)
+    middle_name = models.CharField(max_length=20, default="", null=True, blank=True)
     last_name = models.CharField(max_length=20, null=False)
-    email = models.EmailField()
+    email = models.EmailField(null=True, blank=True)
     spouse = models.ForeignKey('Person', on_delete=models.SET_NULL, null=True, blank=True)
 
     def __str__(self):
-        return f"{self.first_name} {self.middle_name} {self.last_name}"
+        return f"{self.get_full_name()}"
 
-    def __repr__(self):
-        out =   f"""
+    def get_info(self):
+        out = f"""
                 Person ID: {self.person_ID}
                 Household: {self.household}
-                Name: {self.first_name} {self.middle_name} {self.last_name}
+                Name: {self.get_full_name()}
                 Email: {self.email}
                 """
-        if self.spouse is not None:
+        if self.is_married():
             out += f"Spouse: {self.spouse}"
 
         return out
@@ -67,3 +68,6 @@ class Person(models.Model):
 
     def get_full_name(self):
         return f"{self.first_name} {self.middle_name} {self.last_name}"
+
+    def is_married(self):
+        return self.spouse is not None

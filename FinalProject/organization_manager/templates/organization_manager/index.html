@@ -1,20 +1,14 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Organization Manager</title>
-</head>
-<body>
+{% extends "organization_manager/base.html" %}
 
+{% block content %}
 {% if person_list %}
+    <h3>All People:</h3>
     <ul>
     {% for person in person_list %}
-        <li><a href="/organization_manager/person/{{ person.person_ID }}/">{{ person.get_full_name }}</a></li>
+        <li><a href="{% url 'organization_manager:person_detail' person.person_ID %}">{{ person.get_full_name }}</a></li>
     {% endfor %}
     </ul>
 {% else %}
     <p>There are no people in the database yet!</p>
 {% endif %}
-
-</body>
-</html>
+{% endblock content %}

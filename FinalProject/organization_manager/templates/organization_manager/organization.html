@@ -1,0 +1,13 @@
+{% extends "organization_manager/base.html" %}
+
+{% block content %}
+{% if organization %}
+    <h2>{{ organization.organization_name }}</h2>
+    <p>{{ organization.organization_description }}</p>
+    {% for household in organization.household_set %}
+        <p>{{ household.__repr__ }}</p>
+{% else %}
+    <p>{{ organization.organization_name }} doesn't exist.</p>
+{% endif %}
+
+{% endblock content %}
