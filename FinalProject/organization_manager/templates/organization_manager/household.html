@@ -1,10 +1,17 @@
-{% extends "organization_manager/base.html" %}
+{% extends 'organization_manager/base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}Update: {{ household.household_name }}{% endblock title %}
+
+{% block content_header %}
+    <h1>Edit Household</h1>
+    <p><i>{{ household.household_name }}</i></p>
+{% endblock content_header %}
 
 {% block content %}
-{% if household %}
-    <p>ID: {{ household.household_ID }}</p>
-    <p>Contact: {{ household.household_contact }}</p>
-{% else %}
-    <p>Household {{ household.household_ID }} does not exist.</p>
-{% endif %}
+    <form method="POST" action="{% url 'organization_manager:update_household' household_ID %}">
+        {% csrf_token %}
+        {{ form|crispy }}
+        <button type="submit" class="btn btn-primary" name="update">Update</button>
+    </form>
 {% endblock content %}

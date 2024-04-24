@@ -9,7 +9,10 @@
 </head>
 <body>
 
-<div class="container rounded p-5 bg-dark text-white">
+<div class="container rounded py-5 bg-light">
+    {% block content_header %}
+    {% endblock content_header %}
+    <hr class="my-5">
     {% block content %}
     {% endblock content %}
 </div>

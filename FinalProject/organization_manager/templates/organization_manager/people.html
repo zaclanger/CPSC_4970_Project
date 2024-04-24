@@ -1,0 +1,52 @@
+{% extends 'organization_manager/base.html' %}
+
+{% block title %}People Database{% endblock title %}
+
+{% block content_header %}
+    <h1>People In Database</h1>
+{% endblock content_header %}
+
+{% block content %}
+    <form method="POST" action="{% url 'organization_manager:people' %}">
+    {% csrf_token %}
+        <table class="table table-striped">
+            <tr>
+                <th>First Name</th>
+                <th>Middle Name</th>
+                <th>Last Name</th>
+                <th>Email</th>
+                <th>Spouse</th>
+                <th>Household</th>
+                <th>Action</th>
+            </tr>
+            {% for person in people %}
+                <tr>
+                    <td class="align-middle">{{ person.first_name }}</td>
+                    <td class="align-middle">{{ person.get_middle_name }}</td>
+                    <td class="align-middle">{{ person.last_name }}</td>
+                    <td class="align-middle">{{ person.get_email }}</td>
+                    <td class="align-middle">{{ person.get_spouse }}</td>
+                    <td class="align-middle">{{ person.house }}</td>
+                    <td class="align-middle">
+                        <div class="d-flex gap-2">
+                            <div class="p-1">
+                                <a href="{% url 'organization_manager:update_person' person.person_ID %}" class="btn btn-primary">Edit</a>
+                            </div>
+                            <div class="p-1">
+                                <button formnovalidate type="submit" class="btn btn-primary" name="delete" value="{{ person.person_ID }}">Delete</button>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            {% endfor %}
+                <tr>
+                {% for field in form %}
+                    <td class="align-middle">{{ field }}</td>
+                {% endfor %}
+                    <td>
+                        <div class="d-grid p-1 mx-auto"><button type="submit" class="btn btn-primary" name="save">Save</button></div>
+                    </td>
+                </tr>
+        </table>
+    </form>
+{% endblock content %}

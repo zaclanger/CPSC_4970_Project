@@ -25,7 +25,7 @@ class OrganizationAdmin(admin.ModelAdmin):
 
 
 class PersonAdmin(admin.ModelAdmin):
-    list_display = ('person_ID', 'get_full_name', 'is_married')
+    list_display = ('get_full_name', 'is_married')
 
 
 # Register your models here.
