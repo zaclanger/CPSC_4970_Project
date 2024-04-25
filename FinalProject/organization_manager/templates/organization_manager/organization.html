@@ -1,13 +1,17 @@
-{% extends "organization_manager/base.html" %}
+{% extends 'organization_manager/base.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}Update: {{ organization.organization_name }}{% endblock title %}
+
+{% block content_header %}
+    <h1>Edit Organization</h1>
+    <p><i>{{ organization.organization_name }}</i></p>
+{% endblock content_header %}
 
 {% block content %}
-{% if organization %}
-    <h2>{{ organization.organization_name }}</h2>
-    <p>{{ organization.organization_description }}</p>
-    {% for household in organization.household_set %}
-        <p>{{ household.__repr__ }}</p>
-{% else %}
-    <p>{{ organization.organization_name }} doesn't exist.</p>
-{% endif %}
-
+    <form method="POST" action="{% url 'organization_manager:update_organization' organization_ID %}">
+        {% csrf_token %}
+        {{ form|crispy }}
+        <button type="submit" class="btn btn-primary" name="update">Update</button>
+    </form>
 {% endblock content %}

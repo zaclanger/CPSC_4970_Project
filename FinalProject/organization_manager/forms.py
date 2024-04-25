@@ -13,12 +13,8 @@ class HouseholdForm(forms.ModelForm):
         model = Household
         fields = ['household_name', 'household_contact', 'members', 'address']
 
-    pass
-
 
 class OrganizationForm(forms.ModelForm):
     class Meta:
         model = Organization
-        fields = '__all__'
-
-    pass
+        fields = ['organization_name', 'organization_description', 'member_households']

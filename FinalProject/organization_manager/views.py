@@ -32,6 +32,35 @@ def people(request):
     context['form'] = form
     return render(request, "organization_manager/people.html", context)
 
+def people_in_household(request, household_ID):
+    context = {}
+    form = HouseholdForm()
+    household_list = Household.objects.all().filter(pk=household_ID)
+    if len(household_list) == 0:
+        return HttpResponseRedirect('/organization_manager/people')
+    household = household_list[0]
+    person_list = Person.objects.filter(household__in=household_list)
+    person_excluded_list = Person.objects.exclude(household__in=household_list)
+    context['people'] = person_list
+    context['people_ex'] = person_excluded_list
+    context['title'] = 'People By Household'
+    context['household'] = household
+
+    if request.method == 'POST':
+        if 'add' in request.POST:
+            pid = request.POST.get('add')
+            person = Person.objects.get(pk=pid)
+            household.members.add(person)
+            household.save()
+        elif 'remove' in request.POST:
+            pid = request.POST.get('remove')
+            person = Person.objects.get(pk=pid)
+            household.members.remove(person)
+            household.save()
+        elif 'edit' in request.POST:
+            pid = request.POST.get('edit')
+    context['form'] = form
+    return render(request, "organization_manager/house-people.html", context)
 
 def person_form(request, person_ID=0):
     context = {}
@@ -78,6 +107,37 @@ def households(request):
     context['form'] = form
     return render(request, "organization_manager/households.html", context)
 
+def households_in_org(request, org_ID):
+    context = {}
+    form = HouseholdForm()
+    organization_list = Organization.objects.all().filter(pk=org_ID)
+    if len(organization_list) == 0:
+        return HttpResponseRedirect('/organization_manager/households')
+    organization = organization_list[0]
+    household_list = Household.objects.filter(organization__in=organization_list)
+    if len(household_list) == 0:
+        return HttpResponseRedirect('/organization_manager/households')
+    household_excluded_list = Household.objects.exclude(organization__in=organization_list)
+    context['households'] = household_list
+    context['households_ex'] = household_excluded_list
+    context['title'] = f'Households By Organization'
+    context['organization'] = organization
+
+    if request.method == 'POST':
+        if 'add' in request.POST:
+            hid = request.POST.get('add')
+            household = Household.objects.get(pk=hid)
+            organization.member_households.add(household)
+            organization.save()
+        elif 'remove' in request.POST:
+            hid = request.POST.get('remove')
+            household = Household.objects.get(pk=hid)
+            organization.member_households.remove(household)
+            organization.save()
+        elif 'edit' in request.POST:
+            hid = request.POST.get('edit')
+    context['form'] = form
+    return render(request, "organization_manager/org-households.html", context)
 
 def household_form(request, household_ID):
     context = {}
@@ -103,11 +163,51 @@ def household_form(request, household_ID):
             form.save()
         return HttpResponseRedirect('/organization_manager/households')
 
+def organizations(request):
+    context = {}
+    form = OrganizationForm()
+    organization_list = Organization.objects.all()
+    context['organizations'] = organization_list
+    context['title'] = 'Organization Database'
+
+    if request.method == 'POST':
+        if 'save' in request.POST:
+            form = OrganizationForm(request.POST)
+            form.save()
+            form = OrganizationForm()
+        elif 'delete' in request.POST:
+            oid = request.POST.get('delete')
+            selected_organization = Organization.objects.get(org_ID=oid)
+            selected_organization.delete()
+        elif 'edit' in request.POST:
+            oid = request.POST.get('edit')
+    context['form'] = form
+    return render(request, "organization_manager/organizations.html", context)
+
 
 def organization_form(request, org_ID):
-    form = OrganizationForm()
-    organization = Organization.objects.get(pk=org_ID)
-    return render(request, "organization_manager/organization.html", {"form": form})
+    context = {}
+
+    context['title'] = 'Edit Organization'
+    context['organization_ID'] = org_ID
+    context['households'] = Household.objects.all()
+    context['organizations'] = Organization.objects.all()
+
+    if request.method == 'GET':
+        if org_ID == 0:
+            form = OrganizationForm()
+        else:
+            organization = Organization.objects.get(pk=org_ID)
+            context['organization'] = organization
+            form = OrganizationForm(instance=organization)
+            context['form'] = form
+            return render(request, 'organization_manager/organization.html', context)
+    elif request.method == 'POST':
+        organization = Organization.objects.get(pk=org_ID)
+        form = OrganizationForm(request.POST, instance=organization)
+        if form.is_valid():
+            form.save()
+        return HttpResponseRedirect('/organization_manager/organizations')
 
 class IndexView(generic.ListView):
     template_name = 'organization_manager/index.html'

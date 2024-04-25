@@ -1,0 +1,66 @@
+{% extends 'organization_manager/base.html' %}
+
+{% block title %}Household Database{% endblock title %}
+
+{% block content_header %}
+    <h1>Households In {{ organization }}</h1>
+{% endblock content_header %}
+
+{% block content %}
+    <form method="POST" action="{% url 'organization_manager:households_in_org' organization.org_ID %}">
+    {% csrf_token %}
+        <table class="table table-striped">
+            <tr>
+                <th>Household Name</th>
+                <th>Household Contact</th>
+                <th>Number of Members</th>
+                <th>Address</th>
+                <th>Action</th>
+            </tr>
+            {% for household in households %}
+                <tr>
+                    <td class="align-middle">{{ household.household_name }}</td>
+                    <td class="align-middle">{{ household.household_contact }}</td>
+                    <td class="align-middle">{{ household.members.count }}</td>
+                    <td class="align-middle">{{ household.address }}</td>
+                    <td class="align-middle">
+                        <div class="d-flex gap-2">
+                            <div class="p-1">
+                                <a href="{% url 'organization_manager:update_household' household.household_ID %}" class="btn btn-primary">Edit</a>
+                            </div>
+                            <div class="p-1">
+                                <button formnovalidate type="submit" class="btn btn-primary" name="remove" value="{{ household.household_ID }}">Remove</button>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+        <h1 class="py-5">Add a Household</h1>
+        <hr>
+        <table class="table table-striped">
+            <tr>
+                <th>Household Name</th>
+                <th>Household Contact</th>
+                <th>Number of Members</th>
+                <th>Address</th>
+                <th>Action</th>
+            </tr>
+            {% for household in households_ex %}
+                <tr>
+                    <td class="align-middle">{{ household.household_name }}</td>
+                    <td class="align-middle">{{ household.household_contact }}</td>
+                    <td class="align-middle">{{ household.members.count }}</td>
+                    <td class="align-middle">{{ household.address }}</td>
+                    <td class="align-middle">
+                        <div class="d-flex gap-2">
+                            <div class="p-1">
+                                <button formnovalidate type="submit" class="btn btn-primary" name="add" value="{{ household.household_ID }}">Add</button>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+    </form>
+{% endblock content %}

@@ -19,6 +19,9 @@ class Organization(models.Model):
                 Description: {self.organization_description}
                 """
 
+    def get_members(self):
+        return [household for household in self.member_households.all()]
+
 
 class Household(models.Model):
     household_ID = models.AutoField(primary_key=True)
@@ -39,6 +42,9 @@ class Household(models.Model):
                 Address: {self.address}
                 """
         return out
+
+    def get_members(self):
+        return [member for member in Household.members.all().filter(id=self.household_ID)]
 
 
 class Person(models.Model):

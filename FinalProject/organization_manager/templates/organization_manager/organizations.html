@@ -1,0 +1,56 @@
+{% extends 'organization_manager/base.html' %}
+
+{% block title %}Organization Database{% endblock title %}
+
+{% block content_header %}
+    <h1>Organizations In Database</h1>
+{% endblock content_header %}
+
+{% block content %}
+    <form method="POST" action="{% url 'organization_manager:organizations' %}">
+    {% csrf_token %}
+        <table class="table table-striped">
+            <tr>
+                <th>Organization Name</th>
+                <th>Organization Description</th>
+                <th>Number of Households</th>
+                <th>Actions</th>
+            </tr>
+            {% for organization in organizations %}
+                <tr>
+                    <td class="align-middle">{{ organization.organization_name }}</td>
+                    <td class="align-middle">{{ organization.organization_description }}</td>
+                    <td class="align-middle">{{ organization.member_households.count }}</td>
+                    <td class="align-middle">
+                        <div class="d-flex gap-2">
+                            <div class="p-1">
+                                <a href="{% url 'organization_manager:update_organization' organization.org_ID %}" class="btn btn-primary">Edit</a>
+                            </div>
+                            <div class="p-1">
+                                <button formnovalidate type="submit" class="btn btn-primary" name="delete" value="{{ organization.organization_ID }}">Delete</button>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            {% endfor %}
+        </table>
+        <h1 class="py-5">Add an Organization</h1>
+        <hr>
+        <table class="table table-striped">
+            <tr>
+                <th class="align-middle">Organization Name</th>
+                <th class="align-middle">Description</th>
+                <th class="align-middle">Households</th>
+                <th class="align-middle">Action</th>
+            </tr>
+            <tr>
+            {% for field in form %}
+                <td>{{ field }}</td>
+            {% endfor %}
+                <td>
+                    <div class="d-grid p-1 mx-auto"><button type="submit" class="btn btn-primary" name="save">Save</button></div>
+                </td>
+            </tr>
+        </table>
+    </form>
+{% endblock content %}
