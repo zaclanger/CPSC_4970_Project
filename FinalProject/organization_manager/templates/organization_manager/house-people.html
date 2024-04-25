@@ -3,7 +3,7 @@
 {% block title %}Person Database{% endblock title %}
 
 {% block content_header %}
-    <h1>People In {{ household }}</h1>
+    <h1>People In Household: {{ household }}</h1>
 {% endblock content_header %}
 
 {% block content %}
@@ -16,7 +16,6 @@
                 <th>Last Name</th>
                 <th>Email</th>
                 <th>Spouse</th>
-                <th>Household</th>
                 <th>Action</th>
             </tr>
             {% for person in people %}
@@ -26,7 +25,6 @@
                     <td class="align-middle">{{ person.last_name }}</td>
                     <td class="align-middle">{{ person.email }}</td>
                     <td class="align-middle">{{ person.spouse }}</td>
-                    <td class="align-middle">{{ person.household }}</td>
                     <td class="align-middle">
                         <div class="d-flex gap-2">
                             <div class="p-1">
@@ -61,7 +59,7 @@
                     <td class="align-middle">
                         <div class="d-flex gap-2">
                             <div class="p-1">
-                                <button formnovalidate type="submit" class="btn btn-primary" name="add" value="{{ household.household_ID }}">Add</button>
+                                <button formnovalidate type="submit" class="btn btn-primary" name="add" value="{{ person.person_ID }}">Add</button>
                             </div>
                         </div>
                     </td>

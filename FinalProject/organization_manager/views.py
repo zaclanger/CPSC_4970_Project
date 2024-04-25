@@ -18,6 +18,20 @@ def people(request):
     context['people'] = person_list
     context['title'] = 'People Database'
 
+    if request.method == 'GET':
+        if 'search' in request.GET:
+            query = request.GET.get('search')
+            print(query)
+            household_list = Household.objects.all().filter(pk=query)
+
+            if len(household_list) == 0:
+                context['error'] = 'Household not found'
+            elif len(household_list) > 1:
+                context['error'] = 'Too many households match'
+            else:
+                household_ID = household_list[0].household_ID
+                return HttpResponseRedirect(f'/organization_manager/people/filter/{household_ID}/')
+
     if request.method == 'POST':
         if 'save' in request.POST:
             form = PersonForm(request.POST)
@@ -93,6 +107,20 @@ def households(request):
     context['households'] = household_list
     context['title'] = 'Household Database'
 
+    if request.method == 'GET':
+        if 'search' in request.GET:
+            query = request.GET.get('search')
+            print(query)
+            organization_list = Organization.objects.all().filter(pk=query)
+
+            if len(organization_list) == 0:
+                context['error'] = 'Organization not found'
+            elif len(organization_list) > 1:
+                context['error'] = 'Too many organizations match'
+            else:
+                organization_ID = organization_list[0].org_ID
+                return HttpResponseRedirect(f'/organization_manager/households/filter/{organization_ID}/')
+
     if request.method == 'POST':
         if 'save' in request.POST:
             form = HouseholdForm(request.POST)
@@ -114,12 +142,6 @@ def households_in_org(request, org_ID):
     if len(organization_list) == 0:
         return HttpResponseRedirect('/organization_manager/households')
     organization = organization_list[0]
-    household_list = Household.objects.filter(organization__in=organization_list)
-    if len(household_list) == 0:
-        return HttpResponseRedirect('/organization_manager/households')
-    household_excluded_list = Household.objects.exclude(organization__in=organization_list)
-    context['households'] = household_list
-    context['households_ex'] = household_excluded_list
     context['title'] = f'Households By Organization'
     context['organization'] = organization
 
@@ -136,6 +158,12 @@ def households_in_org(request, org_ID):
             organization.save()
         elif 'edit' in request.POST:
             hid = request.POST.get('edit')
+    household_list = Household.objects.filter(organization__in=organization_list)
+    if len(household_list) == 0:
+        return HttpResponseRedirect('/organization_manager/households')
+    household_excluded_list = Household.objects.exclude(organization__in=organization_list)
+    context['households'] = household_list
+    context['households_ex'] = household_excluded_list
     context['form'] = form
     return render(request, "organization_manager/org-households.html", context)
 

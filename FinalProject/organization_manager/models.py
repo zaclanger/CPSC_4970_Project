@@ -90,3 +90,6 @@ class Person(models.Model):
 
     def is_married(self):
         return self.spouse is not None
+
+    def get_household(self):
+        return self.household_set

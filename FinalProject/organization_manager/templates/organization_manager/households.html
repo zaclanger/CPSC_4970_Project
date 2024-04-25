@@ -6,11 +6,21 @@
     <h1>Households In Database</h1>
 {% endblock content_header %}
 
+{% block searchbar %}
+    <form class="form-inline" method="GET">
+        <div class="d-flex">
+            <input class="form-control mr-sm2" type="text" placeholder="Search by Organization ID" name="search">
+            <button type="submit" class="btn btn-primary my-2 my-sm-0">Search</button>
+        </div>
+    </form>
+{% endblock searchbar %}
+
 {% block content %}
     <form method="POST" action="{% url 'organization_manager:households' %}">
     {% csrf_token %}
         <table class="table table-striped">
             <tr>
+                <th>Household ID</th>
                 <th>Household Name</th>
                 <th>Household Contact</th>
                 <th>Number of Members</th>
@@ -19,6 +29,7 @@
             </tr>
             {% for household in households %}
                 <tr>
+                    <td class="align-middle">{{ household.household_ID }}</td>
                     <td class="align-middle">{{ household.household_name }}</td>
                     <td class="align-middle">{{ household.household_contact }}</td>
                     <td class="align-middle">{{ household.members.count }}</td>

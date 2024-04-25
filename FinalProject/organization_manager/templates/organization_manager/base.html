@@ -9,6 +9,7 @@
 </head>
 <body>
 
+
 <nav class="navbar bg-dark navbar-expand-lg">
     <div class="container-fluid">
         <div class="collapse navbar-collapse" id="navbarText">
@@ -17,16 +18,18 @@
                 <a class="nav-link active" aria-current="page" href="#">Home</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="#">People</a>
+                <a class="nav-link" href="{% url 'organization_manager:people' %}">People</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="#">Households</a>
+                <a class="nav-link" href="{% url 'organization_manager:households' %}">Households</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="#">Organizations</a>
+                <a class="nav-link" href="{% url 'organization_manager:organizations' %}"> Organizations</a>
             </li>
         </ul>
     </div>
+    {% block searchbar %}
+    {% endblock searchbar %}
 </nav>
 <div class="container rounded py-5 bg-light">
     {% block content_header %}

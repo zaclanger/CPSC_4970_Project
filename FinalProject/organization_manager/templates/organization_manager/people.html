@@ -6,7 +6,19 @@
     <h1>People In Database</h1>
 {% endblock content_header %}
 
+{% block searchbar %}
+    <form class="form-inline" method="GET">
+        <div class="d-flex">
+            <input class="form-control mr-sm2" type="text" placeholder="Search by household ID" name="search">
+            <button type="submit" class="btn btn-primary my-2 my-sm-0">Search</button>
+        </div>
+    </form>
+{% endblock searchbar %}
+
 {% block content %}
+    {% if error %}
+        <p>{{ error }}</p>
+    {% endif %}
     <form method="POST" action="{% url 'organization_manager:people' %}">
     {% csrf_token %}
         <table class="table table-striped">
