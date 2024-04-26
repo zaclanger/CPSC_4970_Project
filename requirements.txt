@@ -4,7 +4,6 @@ crispy-bootstrap5==2024.2
 dj-database-url==2.1.0
 Django
 django-bootstrap-v5==1.0.11
-django-bootstrap5-form==5.0.1
 django-crispy-forms==2.1
 django-heroku==0.3.1
 gunicorn==22.0.0
