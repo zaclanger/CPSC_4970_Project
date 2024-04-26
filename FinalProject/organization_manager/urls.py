@@ -3,7 +3,7 @@ from . import views
 
 app_name = 'organization_manager'
 urlpatterns = [
-    path('', views.IndexView.as_view(), name='index'),
+    path('', views.people, name='index'),
     path('people/filter/<int:household_ID>/', views.people_in_household, name='people_in_household'),
     path('people/', views.people, name='people'),
     path('person/<int:person_ID>/', views.person_form, name='update_person'),
